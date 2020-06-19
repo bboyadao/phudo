@@ -7,8 +7,8 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./janus-gateway/html:/root/janus-gateway/html/
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - janus_static:/root/janus-gateway/html/
       # - /etc/letsencrypt:/etc/letsencrypt:ro
 
     networks:
@@ -27,7 +27,8 @@ services:
       - "10000-10200:10000-10200/udp"
     environment:
       - DOCKER_IP=192.168.2.103
-
+    volumes:
+      - janus_static:/usr/local/src/janus-gateway/html
     networks:
       - youbook_network
 

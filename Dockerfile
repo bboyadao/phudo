@@ -46,6 +46,7 @@ RUN cd /tmp && \
 	make install
 
 COPY ./janus-gateway/ /usr/local/src/janus-gateway
+COPY ./config/janus/ /usr/local/src/janus-gateway/conf
 
 RUN cd /usr/local/src/janus-gateway && \
 	sh autogen.sh && \
@@ -94,6 +95,7 @@ RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so.10
 RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so
 
 COPY --from=0 /usr/local/bin/janus /usr/local/bin/janus
+COPY --from=0 /usr/local/src/janus-gateway/html  /usr/local/src/janus-gateway/html
 COPY --from=0 /usr/local/bin/janus-cfgconv /usr/local/bin/janus-cfgconv
 COPY --from=0 /usr/local/etc/janus /usr/local/etc/janus
 COPY --from=0 /usr/local/lib/janus /usr/local/lib/janus
