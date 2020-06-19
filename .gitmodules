@@ -1,3 +1,7 @@
 [submodule "youbook"]
 	path = youbook
 	url = git@github.com:bboyadao/youbook.git
+
+[submodule "janus"]
+	path = janus-gateway
+	url = https://github.com/meetecho/janus-gateway.git
