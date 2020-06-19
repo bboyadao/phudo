@@ -45,8 +45,15 @@ RUN cd /tmp && \
 	make && \
 	make install
 
-COPY ./janus-gateway/ /usr/local/src/janus-gateway
-COPY ./config/janus/ /usr/local/src/janus-gateway/conf
+
+RUN cd /tmp && \
+	git clone git@github.com:meetecho/janus-gateway.git \
+	cd janus-gateway
+COPY ./config/janus/ /tmp/janus-gateway/conf
+	./autogen.sh && \
+	./configure --prefix=/usr && \
+	make && \
+	make install
 
 RUN cd /usr/local/src/janus-gateway && \
 	git checkout master && \
