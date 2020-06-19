@@ -49,6 +49,7 @@ COPY ./janus-gateway/ /usr/local/src/janus-gateway
 COPY ./config/janus/ /usr/local/src/janus-gateway/conf
 
 RUN cd /usr/local/src/janus-gateway && \
+	git checkout master && \
 	sh autogen.sh && \
 	./configure --prefix=/usr/local && \
 	make && \
