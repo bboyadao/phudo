@@ -1,0 +1,3 @@
+[submodule "youbook"]
+	path = youbook
+	url = git@github.com:bboyadao/youbook.git
