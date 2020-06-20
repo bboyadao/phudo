@@ -7,9 +7,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/conf.d:/etc/nginx/conf.d/
       - janus_static:/root/janus-gateway/html/
-      # - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
 
     networks:
       - youbook_network
