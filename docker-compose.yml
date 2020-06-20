@@ -7,7 +7,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./config/nginx/conf.d/lcoal.conf:/etc/nginx/conf.d/default.conf
+      - ./config/nginx/conf.d/:/etc/nginx/conf.d/
       - janus_static:/root/janus-gateway/html/
       - /etc/letsencrypt:/etc/letsencrypt:ro
 
