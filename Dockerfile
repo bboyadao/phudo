@@ -84,7 +84,7 @@ COPY ./config/janus/ /work/janus-gateway/conf
 
 RUN cd janus-gateway \
   && sh autogen.sh \
-  && ./configure --prefix=/opt/janus --enable-post-processing \
+  && ./configure --prefix=/opt/janus --enable-docs --enable-post-processing \
   && make \
   && make install \
   && make configs \
