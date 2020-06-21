@@ -32,6 +32,7 @@ services:
     volumes:
       - janus_static:/usr/local/src/janus-gateway/html
       - ./config/janusx:/opt/janus/etc/janus
+      - ./config/cert:/opt/janus/ssl/cert/
     networks:
       - youbook_network
 
