@@ -38,7 +38,6 @@ RUN apt-get update -y \
   bison \
   && rm -rf /var/lib/apt/lists/*
 
-ARG DOXYGEN_V=1.8.18
 RUN git clone https://github.com/doxygen/doxygen.git \
     && cd doxygen \
     && mkdir build \

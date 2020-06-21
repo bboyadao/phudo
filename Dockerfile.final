@@ -28,6 +28,8 @@ RUN apt-get -y update \
 		build-essential \
 		flex \
 		bison \
+		npm \
+		gtk-doc-tools \
 		&& rm -rf /var/lib/apt/lists/*
 
 ARG DOXYGEN_V=1.8.18
@@ -48,14 +50,15 @@ RUN cd /tmp && \
 	make shared_library && \
 	make install
 
-RUN cd /tmp && \
-	git clone https://gitlab.freedesktop.org/libnice/libnice && \
-	cd libnice && \
-	git checkout 0.1.17 && \
-	./autogen.sh && \
-	./configure --prefix=/usr && \
-	make && \
-	make install
+
+ARG LIBNICE_V=0.1.17
+RUN cd /tmp \
+  && wget --no-check-certificate https://libnice.freedesktop.org/releases/libnice-${LIBNICE_V}.tar.gz \
+  && tar xvf libnice-${LIBNICE_V}.tar.gz \
+  && cd libnice-${LIBNICE_V} \
+  && ./configure --prefix=/usr && make && sudo make install \
+  && cd .. \
+  && rm -rf libnice-${LIBNICE_V}
 
 
 ARG JANUS_VERSION=0.10.2
@@ -64,12 +67,13 @@ RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archi
   && tar xvf janus-gateway.tar.gz -C janus-gateway --strip-components 1 \
 	&& cd janus-gateway \
   && sh autogen.sh \
-  && ./configure --prefix=/opt/janus  --enable-all-js-modules=yes --enable-docs --enable-post-processing \
+  && ./configure --prefix=/usr/local  --enable-all-js-modules=yes --enable-docs --enable-post-processing \
   && make \
   && make install \
   && make configs \
   && cd ../ \
   && rm -rf janus-gateway.tar.gz janus-gateway
+
 
 FROM debian:buster-slim
 
@@ -110,7 +114,6 @@ COPY --from=builder /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so.10.10.0
 RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so.10
 RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so
 
-COPY --from=builder /usr/local/bin/doxygen /usr/local/bin/doxygen
 COPY --from=builder /usr/local/bin/janus /usr/local/bin/janus
 COPY --from=builder /usr/local/src/janus-gateway/html  /usr/local/src/janus-gateway/html
 COPY --from=builder /usr/local/bin/janus-cfgconv /usr/local/bin/janus-cfgconv
