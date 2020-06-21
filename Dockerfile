@@ -80,7 +80,7 @@ RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archi
 	&& pwd \
 	&& ls -la /work/janus-gateway/conf
 
-COPY ./config/janus/ /work/janus-gateway/conf
+COPY ./config/janus/*.cfg /work/janus-gateway/conf
 
 RUN cd janus-gateway \
   && sh autogen.sh \
@@ -89,8 +89,7 @@ RUN cd janus-gateway \
   && make install \
   && make configs \
   && cd ../ \
-  && rm -rf janus-gateway.tar.gz \
-  && chmod 777 janus-gateway/html
+  && rm -rf janus-gateway.tar.gz janus-gateway
 
 # Declare the ports we use
 # EXPOSE 7088 8088 8188 7089 8089 8189
