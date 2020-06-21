@@ -33,6 +33,7 @@ RUN apt-get install -y \
     graphviz \
     libconfig-dev \
     cmake
+RUN apt-get upgrade doxygen
 
 RUN cd ~ \
     && git clone https://github.com/cisco/libsrtp.git \
