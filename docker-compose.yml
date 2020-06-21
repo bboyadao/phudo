@@ -31,7 +31,7 @@ services:
       - "10000-10200:10000-10200/udp"
     volumes:
       - janus_static:/usr/local/src/janus-gateway/html
-      - ./config/janusx:/usr/local/etc/janus
+      - ./config/janusx:/opt/janus/etc/janus
     networks:
       - youbook_network
 
