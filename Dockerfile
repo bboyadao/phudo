@@ -1,44 +1,40 @@
-# This seems to break the Jenkins Docker plugin
-# leaving this here for now so we can switch to it if things get fixed
-# ARG  CODE_VERSION="8"
-# FROM debian:${CODE_VERSION}
+FROM debian:buster-slim AS builder
 
-# set base image debian jessie
-FROM debian:10
+RUN apt-get -y update \
+		&& apt-get install -y \
+		libmicrohttpd-dev \
+		libjansson-dev \
+		libssl-dev \
+		libsofia-sip-ua-dev \
+		libglib2.0-dev \
+		libopus-dev \
+		libogg-dev \
+		libavutil-dev \
+		libavcodec-dev \
+		libavformat-dev \
+		libini-config-dev \
+		libcollection-dev \
+		pkg-config \
+		libconfig-dev \
+		gengetopt \
+		libtool \
+		automake \
+		wget \
+		sudo \
+		make \
+		git \
+		cmake \
+		graphviz \
+		build-essential \
+		flex \
+		bison \
+		npm \
+		gtk-doc-tools \
+		&& rm -rf /var/lib/apt/lists/*
 
-WORKDIR /work
-
-RUN apt-get update -y \
-  && apt-get install -y \
-  libmicrohttpd-dev \
-  libjansson-dev \
-  libssl-dev \
-  libsofia-sip-ua-dev \
-  libglib2.0-dev \
-  libopus-dev \
-  libogg-dev \
-  libavutil-dev \
-  libavcodec-dev \
-  libavformat-dev \
-  libini-config-dev \
-  libcollection-dev \
-  pkg-config \
-  libconfig-dev \
-  gengetopt \
-  libtool \
-  automake \
-  wget \
-  sudo \
-  make \
-  git \
-  cmake \
-  graphviz \
-  build-essential \
-  flex \
-  bison \
-  && rm -rf /var/lib/apt/lists/*
-
-RUN git clone https://github.com/doxygen/doxygen.git \
+ARG DOXYGEN_V=1.8.18
+RUN cd /tmp \
+		&& git clone https://github.com/doxygen/doxygen.git \
     && cd doxygen \
     && mkdir build \
     && cd build \
@@ -46,70 +42,91 @@ RUN git clone https://github.com/doxygen/doxygen.git \
     && make \
     && make install
 
+RUN cd /tmp && \
+	wget https://github.com/cisco/libsrtp/archive/v2.3.0.tar.gz && \
+	tar xfv v2.3.0.tar.gz && \
+	cd libsrtp-2.3.0 && \
+	./configure --prefix=/usr --enable-openssl && \
+	make shared_library && \
+	make install
 
 
-RUN cd /work \
-  && wget --no-check-certificate https://libnice.freedesktop.org/releases/libnice-0.1.17.tar.gz \
-  && tar xvf libnice-0.1.17.tar.gz \
-  && cd libnice-0.1.17 \
+ARG LIBNICE_V=0.1.17
+RUN cd /tmp \
+  && wget --no-check-certificate https://libnice.freedesktop.org/releases/libnice-${LIBNICE_V}.tar.gz \
+  && tar xvf libnice-${LIBNICE_V}.tar.gz \
+  && cd libnice-${LIBNICE_V} \
   && ./configure --prefix=/usr && make && sudo make install \
   && cd .. \
-  && rm -rf libnice-0.1.17
+  && rm -rf libnice-${LIBNICE_V}
 
-RUN cd /work \
-  && git clone https://github.com/cisco/libsrtp.git \
-  && cd libsrtp \
-  && git checkout v2.2.0 \
-  && ./configure --prefix=/usr --enable-openssl \
-  && make shared_library \
-  && sudo make install \
-  && cd .. \
-  && rm -rf libsrtp
-
-RUN wget https://github.com/sctplab/usrsctp/archive/0.9.3.0.tar.gz \
-  && tar xvf 0.9.3.0.tar.gz \
-  && cd usrsctp-0.9.3.0 \
-  && ./bootstrap \
-  && ./configure --prefix=/usr \
-  && make \
-  && sudo make install \
-  && cd .. \
-  && rm -rf usrsctp
-
-RUN git clone https://github.com/warmcat/libwebsockets.git \
-  && cd libwebsockets \
-  && git checkout v4.0-stable \
-  && mkdir build \
-  && cd build \
-  && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. \
-  && make \
-  && sudo make install \
-  && cd ../../ \
-  && rm -rf libwebsockets
 
 ARG JANUS_VERSION=0.10.2
 RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archive/v${JANUS_VERSION}.tar.gz \
   && mkdir janus-gateway \
   && tar xvf janus-gateway.tar.gz -C janus-gateway --strip-components 1 \
-	&& pwd \
-	&& ls -la /work/janus-gateway/conf
-
-# COPY ./config/janus/*.cfg /work/janus-gateway/conf/
-
-RUN cd janus-gateway \
+	&& cd janus-gateway \
   && sh autogen.sh \
-  && ./configure --prefix=/opt/janus  --enable-docs --enable-post-processing \
+  && ./configure --prefix=/usr/local  --enable-all-js-modules=yes --enable-docs --enable-post-processing \
   && make \
   && make install \
   && make configs \
   && cd ../ \
-  && rm -rf janus-gateway.tar.gz janus-gateway
+  && rm -rf janus-gateway.tar.gz
 
-# Declare the ports we use
-# EXPOSE 7088 8088 8188 7089 8089 8189
+FROM debian:buster-slim
+
+ARG BUILD_DATE="undefined"
+ARG GIT_BRANCH="undefined"
+ARG GIT_COMMIT="undefined"
+ARG VERSION="undefined"
+
+LABEL build_date=${BUILD_DATE}
+LABEL git_branch=${GIT_BRANCH}
+LABEL git_commit=${GIT_COMMIT}
+LABEL version=${VERSION}
+
+RUN apt-get -y update && \
+	apt-get install -y \
+		libmicrohttpd12 \
+		libjansson4 \
+		libssl1.1 \
+		libsofia-sip-ua0 \
+		libglib2.0-0 \
+		libopus0 \
+		libogg0 \
+		libcurl4 \
+		liblua5.3-0 \
+		libconfig9 \
+		libusrsctp1 \
+		libwebsockets8 \
+		libnanomsg5 \
+		librabbitmq4 && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/lib/libsrtp2.so.1 /usr/lib/libsrtp2.so.1
+RUN ln -s /usr/lib/libsrtp2.so.1 /usr/lib/libsrtp2.so
+
+COPY --from=builder /usr/lib/libnice.la /usr/lib/libnice.la
+COPY --from=builder /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so.10.10.0
+RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so.10
+RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so
+
+COPY --from=builder /usr/local/bin/janus /usr/local/bin/janus
+COPY --from=builder /janus-gateway/html  /usr/local/src/janus-gateway/html
+COPY --from=builder /usr/local/bin/janus-cfgconv /usr/local/bin/janus-cfgconv
+COPY --from=builder /usr/local/etc/janus /usr/local/etc/janus
+COPY --from=builder /usr/local/lib/janus /usr/local/lib/janus
+COPY --from=builder /usr/local/share/janus /usr/local/share/janus
+
+ENV BUILD_DATE=${BUILD_DATE}
+ENV GIT_BRANCH=${GIT_BRANCH}
+ENV GIT_COMMIT=${GIT_COMMIT}
+ENV VERSION=${VERSION}
 
 ARG BUILD_DATE
 ARG VCS_REF
 
-ENTRYPOINT ["/opt/janus/bin/janus"]
+ENTRYPOINT ["/usr/local/bin/janus"]
 CMD ["--stun-server=stun.l.google.com:19302"]

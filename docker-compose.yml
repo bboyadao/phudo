@@ -11,7 +11,8 @@ services:
     volumes:
       # - ./config/nginx/:/etc/nginx/:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - ./janus-gateway/html:/usr/share/janus/html/
+      - janus_static:/usr/share/janus/html/
+
 
     networks:
       - youbook_network
@@ -27,10 +28,8 @@ services:
       - "8188:8188"
       - "8089:8089"
       - "10000-10200:10000-10200/udp"
-    environment:
-      - DOCKER_IP=192.168.2.103
     volumes:
-      - janus_static:/work/janus-gateway/html
+      - janus_static:/usr/local/src/janus-gateway/html
     networks:
       - youbook_network
 
