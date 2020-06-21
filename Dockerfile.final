@@ -115,7 +115,7 @@ RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so.10
 RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so
 
 COPY --from=builder /usr/local/bin/janus /usr/local/bin/janus
-COPY --from=builder /usr/local/src/janus-gateway/html  /usr/local/src/janus-gateway/html
+#COPY --from=builder /usr/local/src/janus-gateway/html  /usr/local/src/janus-gateway/html
 COPY --from=builder /usr/local/bin/janus-cfgconv /usr/local/bin/janus-cfgconv
 COPY --from=builder /usr/local/etc/janus /usr/local/etc/janus
 COPY --from=builder /usr/local/lib/janus /usr/local/lib/janus
@@ -129,5 +129,5 @@ ENV VERSION=${VERSION}
 ARG BUILD_DATE
 ARG VCS_REF
 
-ENTRYPOINT ["/opt/janus/bin/janus"]
+ENTRYPOINT ["/usr/local/bin/janus"]
 CMD ["--stun-server=stun.l.google.com:19302"]
