@@ -11,7 +11,7 @@ services:
     volumes:
       # - ./config/nginx/:/etc/nginx/:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - janus_static:/usr/share/nginx/html
+      - janus_static:/usr/share/janus/html/
 
     networks:
       - youbook_network
