@@ -1,8 +1,8 @@
 #FROM debian:jessie
 FROM ubuntu:18.04
 
-LABEL maintainer="Linagora Folks <lgs-openpaas-dev@linagora.com>"
-LABEL description="Provides an image with Janus Gateway"
+LABEL maintainer="bboyadao@gmail.com"
+LABEL description="Janus Gateway full options"
 
 RUN apt-get update -y \
     && apt-get upgrade -y
@@ -72,7 +72,7 @@ RUN apt-get remove -y libnice-dev \
 RUN cd ~ \
     && git clone https://github.com/meetecho/janus-gateway.git \
     && cd janus-gateway \
-    && git checkout v0.7.4 \
+    && git checkout v0.10.2 \
     && sh autogen.sh \
     && ./configure --prefix=/opt/janus --enable-docs --disable-rabbitmq --disable-mqtt \
     && make CFLAGS='-std=c99' \
