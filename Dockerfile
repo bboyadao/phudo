@@ -80,7 +80,7 @@ RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archi
 	&& pwd \
 	&& ls -la /work/janus-gateway/conf
 
-COPY ./config/janus/*.cfg /work/janus-gateway/conf
+# COPY ./config/janus/*.cfg /work/janus-gateway/conf/
 
 RUN cd janus-gateway \
   && sh autogen.sh \
