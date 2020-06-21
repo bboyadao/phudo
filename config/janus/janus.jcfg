@@ -349,7 +349,7 @@ transports: {
 # use a comma separated list of logger file names to identify the loggers
 # to disable. By default all available loggers are enabled and loaded at startup.
 loggers: {
-	#disable = "libjanus_jsonlog.so"
+	disable = "libjanus_jsonlog.so"
 }
 
 # Event handlers allow you to receive live events from Janus happening
