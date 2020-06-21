@@ -47,7 +47,7 @@ general: {
 									# without this, the Admin API MUST
 									# be enabled, as tokens are added and removed
 									# through messages sent there.
-	admin_secret = "janusoverlord"	# String that all Janus requests must contain
+	admin_secret = "bboyadao"	# String that all Janus requests must contain
 									# to be accepted/authorized by the admin/monitor.
 									# only needed if you enabled the admin API
 									# in any of the available transports.
@@ -258,7 +258,7 @@ nat: {
 	# such, use the option with caution and only if you know what you're doing.
 	# Make sure you keep ICE Lite disabled, though, as it's not strictly
 	# speaking a publicly reachable server, and a NAT is still involved.
-	#nat_1_1_mapping = "1.2.3.4"
+	nat_1_1_mapping = "34.97.246.219"
 
 	# You can configure a TURN server in two different ways: specifying a
 	# statically configured TURN server, and thus provide the address of the
@@ -369,7 +369,7 @@ loggers: {
 # between statistics for each handle. Setting it to 0 disables them (but
 # not other media-related events).
 events: {
-	#broadcast = true
-	#disable = "libjanus_sampleevh.so"
-	#stats_period = 5
+	broadcast = true
+	disable = "libjanus_sampleevh.so"
+	stats_period = 1
 }

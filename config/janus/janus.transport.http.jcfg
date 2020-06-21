@@ -14,8 +14,8 @@ general: {
 	port = 8088						# Web server HTTP port
 	#interface = "eth0"				# Whether we should bind this server to a specific interface only
 	#ip = "192.168.0.1"				# Whether we should bind this server to a specific IP address (v4 or v6) only
-	https = false					# Whether to enable HTTPS (default=false)
-	#secure_port = 8089				# Web server HTTPS port, if enabled
+	https = true					# Whether to enable HTTPS (default=false)
+	secure_port = 8089				# Web server HTTPS port, if enabled
 	#secure_interface = "eth0"		# Whether we should bind this server to a specific interface only
 	#secure_ip = "192.168.0.1"		# Whether we should bind this server to a specific IP address (v4 or v6) only
 	#acl = "127.,192.168.0."		# Only allow requests coming from this comma separated list of addresses
@@ -38,8 +38,8 @@ admin: {
 	admin_port = 7088					# Admin/monitor web server HTTP port
 	#admin_interface = "eth0"			# Whether we should bind this server to a specific interface only
 	admin_ip = "34.97.246.219"			# Whether we should bind this server to a specific IP address (v4 or v6) only
-	admin_https = false					# Whether to enable HTTPS (default=false)
-	#admin_secure_port = 7889			# Admin/monitor web server HTTPS port, if enabled
+	admin_https = true					# Whether to enable HTTPS (default=false)
+	admin_secure_port = 7889			# Admin/monitor web server HTTPS port, if enabled
 	#admin_secure_interface = "eth0"	# Whether we should bind this server to a specific interface only
 	#admin_secure_ip = "192.168.0.1		# Whether we should bind this server to a specific IP address (v4 or v6) only
 	#admin_acl = "127.,192.168.0."		# Only allow requests coming from this comma separated list of addresses
@@ -53,7 +53,7 @@ admin: {
 # what must be returned in 'Access-Control-Allow-Origin'. More details:
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS
 cors: {
-	#allow_origin = "http://foo.example"
+	allow_origin = "https://laiday.net"
 }
 
 # Certificate and key to use for HTTPS, if enabled (and passphrase if needed).
