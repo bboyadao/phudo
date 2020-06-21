@@ -30,7 +30,7 @@ services:
     environment:
       - DOCKER_IP=192.168.2.103
     volumes:
-      - janus_static:/usr/local/src/janus-gateway/html
+      - janus_static:/work/janus-gateway/html
     networks:
       - youbook_network
 
