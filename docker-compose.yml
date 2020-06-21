@@ -27,6 +27,7 @@ services:
       - "8088:8088"
       - "8188:8188"
       - "8089:8089"
+      - "7889:7889"
       - "10000-10200:10000-10200/udp"
     volumes:
       - ./config/janusx:/opt/janus/etc/janus
