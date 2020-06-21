@@ -1,6 +1,6 @@
-#FROM debian:jessie
-FROM ubuntu:18.04
-
+# FROM debian:jessie
+# FROM ubuntu:18.04
+FROM debian:buster-slim
 LABEL maintainer="bboyadao@gmail.com"
 LABEL description="Janus Gateway full options"
 
@@ -29,11 +29,10 @@ RUN apt-get install -y \
     sudo \
     make \
     git \
-    doxygen \
+    doxygen=1.8.18 \
     graphviz \
     libconfig-dev \
     cmake
-RUN apt-get upgrade doxygen
 
 RUN cd ~ \
     && git clone https://github.com/cisco/libsrtp.git \
