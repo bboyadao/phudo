@@ -67,7 +67,7 @@ RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archi
   && tar xvf janus-gateway.tar.gz -C janus-gateway --strip-components 1 \
 	&& cd janus-gateway \
   && sh autogen.sh \
-  && ./configure --prefix=/usr/local  --enable-all-js-modules=yes --enable-docs --enable-post-processing \
+  && ./configure --prefix=/opt/janus  --enable-all-js-modules=yes --enable-docs --enable-post-processing \
   && make \
   && make install \
   && make configs \
