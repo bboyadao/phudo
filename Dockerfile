@@ -32,7 +32,22 @@ RUN apt-get update -y \
   make \
   git \
   cmake \
+  graphviz \
+  build-essential \
+  flex \
+  bison \
   && rm -rf /var/lib/apt/lists/*
+
+ARG DOXYGEN_V=1.8.18
+RUN git clone https://github.com/doxygen/doxygen.git \
+    && cd doxygen \
+    && mkdir build \
+    && cd build \
+    && cmake -G "Unix Makefiles" .. \
+    && make \
+    && make install
+
+
 
 RUN cd /work \
   && wget --no-check-certificate https://libnice.freedesktop.org/releases/libnice-0.1.17.tar.gz \
@@ -84,7 +99,7 @@ RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archi
 
 RUN cd janus-gateway \
   && sh autogen.sh \
-  && ./configure --prefix=/opt/janus --enable-post-processing \
+  && ./configure --prefix=/opt/janus  --enable-docs --enable-post-processing \
   && make \
   && make install \
   && make configs \
