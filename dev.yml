@@ -5,9 +5,8 @@ services:
 
     build:
       context: .
-      dockerfile: Dockerfile.final
+      dockerfile: Dockerfile
     ports:
-      # - "80:80"
       - "7088:7088"
       - "8088:8088"
       - "8188:8188"
@@ -17,7 +16,7 @@ services:
       - DOCKER_IP=192.168.2.103
     volumes:
       - janus_static:/usr/local/src/janus-gateway/html
-      # - ./config/janus:/opt/janus/etc/janus
+      - ./config/janusx:/opt/janus/etc/janus
     networks:
       - youbook_network
 

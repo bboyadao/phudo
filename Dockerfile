@@ -27,10 +27,8 @@ RUN apt-get -y update \
 		graphviz \
 		build-essential \
 		flex \
-		bison \
-		npm \
-		gtk-doc-tools \
-		&& rm -rf /var/lib/apt/lists/*
+		bison
+		#&& rm -rf /var/lib/apt/lists/*
 
 ARG DOXYGEN_V=1.8.18
 RUN cd /tmp \
@@ -67,7 +65,7 @@ RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archi
   && tar xvf janus-gateway.tar.gz -C janus-gateway --strip-components 1 \
 	&& cd janus-gateway \
   && sh autogen.sh \
-  && ./configure --prefix=/opt/janus  --enable-all-js-modules=yes --enable-docs --enable-post-processing \
+  && ./configure --prefix=/usr/local --enable-post-processing \
   && make \
   && make install \
   && make configs \
@@ -114,19 +112,11 @@ RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so.10
 RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so
 
 COPY --from=builder /usr/local/bin/janus /usr/local/bin/janus
-COPY --from=builder /janus-gateway/html  /usr/local/src/janus-gateway/html
 COPY --from=builder /usr/local/bin/janus-cfgconv /usr/local/bin/janus-cfgconv
 COPY --from=builder /usr/local/etc/janus /usr/local/etc/janus
-COPY --from=builder /usr/local/lib/janus /usr/local/lib/janus
+COPY --from=builder /usr/local/lib/janus /usr/local/lib/janus/
 COPY --from=builder /usr/local/share/janus /usr/local/share/janus
-
-ENV BUILD_DATE=${BUILD_DATE}
-ENV GIT_BRANCH=${GIT_BRANCH}
-ENV GIT_COMMIT=${GIT_COMMIT}
-ENV VERSION=${VERSION}
-
-ARG BUILD_DATE
-ARG VCS_REF
+COPY --from=builder /janus-gateway/html  /opt/janus/src/janus-gateway/html
 
 ENTRYPOINT ["/usr/local/bin/janus"]
 CMD ["--stun-server=stun.l.google.com:19302"]
