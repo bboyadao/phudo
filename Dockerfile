@@ -37,7 +37,7 @@ RUN apt-get install -y \
 RUN cd ~ \
     && git clone https://github.com/cisco/libsrtp.git \
     && cd libsrtp \
-    && git checkout v2.2.0 \
+    && git checkout v2.3.0 \
     && ./configure --prefix=/usr --enable-openssl \
     && make shared_library \
     && sudo make install
@@ -53,7 +53,7 @@ RUN cd ~ \
 RUN cd ~ \
     && git clone https://github.com/warmcat/libwebsockets.git \
     && cd libwebsockets \
-    && git checkout v3.2.0 \
+    && git checkout v4.0.19 \
     && mkdir build \
     && cd build \
     && cmake -DLWS_MAX_SMP=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr .. \
@@ -62,7 +62,7 @@ RUN cd ~ \
 
 RUN apt-get remove -y libnice-dev \
     && cd /tmp && rm -rf libnice && git clone https://github.com/libnice/libnice.git && cd libnice \
-    && git checkout 0.1.16 \
+    && git checkout 0.1.17 \
     && ./autogen.sh --disable-gtk-doc \
     && ./configure \
     && make \
