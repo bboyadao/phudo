@@ -22,7 +22,6 @@ services:
     container_name: 'janusgw'
     build: ./
     ports:
-      # - "80:80"
       - "7088:7088"
       - "8088:8088"
       - "8188:8188"
