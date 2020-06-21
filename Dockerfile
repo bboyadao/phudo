@@ -84,12 +84,13 @@ COPY ./config/janus/ /work/janus-gateway/conf
 
 RUN cd janus-gateway \
   && sh autogen.sh \
-  && ./configure --prefix=/opt/janus --enable-docs --enable-post-processing \
+  && ./configure --prefix=/opt/janus --enable-post-processing \
   && make \
   && make install \
   && make configs \
   && cd ../ \
-  && rm -rf janus-gateway.tar.gz
+  && rm -rf janus-gateway.tar.gz \
+  && chmod 777 janus-gateway/html
 
 # Declare the ports we use
 # EXPOSE 7088 8088 8188 7089 8089 8189
