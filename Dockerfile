@@ -89,7 +89,7 @@ RUN cd janus-gateway \
   && make install \
   && make configs \
   && cd ../ \
-  && rm -rf janus-gateway.tar.gz janus-gateway
+  && rm -rf janus-gateway.tar.gz
 
 # Declare the ports we use
 # EXPOSE 7088 8088 8188 7089 8089 8189
