@@ -1,86 +1,101 @@
-# FROM debian:jessie
-# FROM ubuntu:18.04
-FROM debian:buster-slim
-LABEL maintainer="bboyadao@gmail.com"
-LABEL description="Janus Gateway full options"
+# This seems to break the Jenkins Docker plugin
+# leaving this here for now so we can switch to it if things get fixed
+# ARG  CODE_VERSION="8"
+# FROM debian:${CODE_VERSION}
+
+# set base image debian jessie
+FROM debian:10
+
+WORKDIR /work
 
 RUN apt-get update -y \
-    && apt-get upgrade -y
+  && apt-get install -y \
+  libmicrohttpd-dev \
+  libjansson-dev \
+  libssl-dev \
+  libsofia-sip-ua-dev \
+  libglib2.0-dev \
+  libopus-dev \
+  libogg-dev \
+  libavutil-dev \
+  libavcodec-dev \
+  libavformat-dev \
+  libini-config-dev \
+  libcollection-dev \
+  pkg-config \
+  libconfig-dev \
+  gengetopt \
+  libtool \
+  automake \
+  wget \
+  sudo \
+  make \
+  git \
+  cmake \
+  && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y \
-    build-essential \
-    libmicrohttpd-dev \
-    libjansson-dev \
-    libssl-dev \
-    libsofia-sip-ua-dev \
-    libglib2.0-dev \
-    libopus-dev \
-    libogg-dev \
-    libini-config-dev \
-    libcollection-dev \
-    pkg-config \
-    gengetopt \
-    libtool \
-    autotools-dev \
-    automake \
-    gtk-doc-tools
+RUN cd /work \
+  && wget --no-check-certificate https://libnice.freedesktop.org/releases/libnice-0.1.17.tar.gz \
+  && tar xvf libnice-0.1.17.tar.gz \
+  && cd libnice-0.1.17 \
+  && ./configure --prefix=/usr && make && sudo make install \
+  && cd .. \
+  && rm -rf libnice-0.1.17
 
-RUN apt-get install -y \
-    sudo \
-    make \
-    git \
-    doxygen=1.8.18 \
-    graphviz \
-    libconfig-dev \
-    cmake
+RUN cd /work \
+  && git clone https://github.com/cisco/libsrtp.git \
+  && cd libsrtp \
+  && git checkout v2.2.0 \
+  && ./configure --prefix=/usr --enable-openssl \
+  && make shared_library \
+  && sudo make install \
+  && cd .. \
+  && rm -rf libsrtp
 
-RUN cd ~ \
-    && git clone https://github.com/cisco/libsrtp.git \
-    && cd libsrtp \
-    && git checkout v2.3.0 \
-    && ./configure --prefix=/usr --enable-openssl \
-    && make shared_library \
-    && sudo make install
+RUN wget https://github.com/sctplab/usrsctp/archive/0.9.3.0.tar.gz \
+  && tar xvf 0.9.3.0.tar.gz \
+  && cd usrsctp-0.9.3.0 \
+  && ./bootstrap \
+  && ./configure --prefix=/usr \
+  && make \
+  && sudo make install \
+  && cd .. \
+  && rm -rf usrsctp
 
-RUN cd ~ \
-    && git clone https://github.com/sctplab/usrsctp \
-    && cd usrsctp \
-    && ./bootstrap \
-    && ./configure --prefix=/usr \
-    && make \
-    && sudo make install
+RUN git clone https://github.com/warmcat/libwebsockets.git \
+  && cd libwebsockets \
+  && git checkout v4.0-stable \
+  && mkdir build \
+  && cd build \
+  && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. \
+  && make \
+  && sudo make install \
+  && cd ../../ \
+  && rm -rf libwebsockets
 
-RUN cd ~ \
-    && git clone https://github.com/warmcat/libwebsockets.git \
-    && cd libwebsockets \
-    && git checkout v4.0.19 \
-    && mkdir build \
-    && cd build \
-    && cmake -DLWS_MAX_SMP=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr .. \
-    && make \
-    && sudo make install
+ARG JANUS_VERSION=0.10.2
+RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archive/v${JANUS_VERSION}.tar.gz \
+  && mkdir janus-gateway \
+  && tar xvf janus-gateway.tar.gz -C janus-gateway --strip-components 1 \
+	&& pwd \
+	&& ls -la /work/janus-gateway/conf
 
-RUN apt-get remove -y libnice-dev \
-    && cd /tmp && rm -rf libnice && git clone https://github.com/libnice/libnice.git && cd libnice \
-    && git checkout 0.1.17 \
-    && ./autogen.sh --disable-gtk-doc \
-    && ./configure \
-    && make \
-    && make install
+# COPY ./config/janus/*.cfg /work/janus-gateway/conf/
 
-# --enable-docs
-RUN cd ~ \
-    && git clone https://github.com/meetecho/janus-gateway.git \
-    && cd janus-gateway \
-    && git checkout v0.10.2 \
-    && sh autogen.sh \
-    && ./configure --prefix=/opt/janus --enable-docs --disable-rabbitmq --disable-mqtt \
-    && make CFLAGS='-std=c99' \
-    && make install \
-    && make configs
+RUN cd janus-gateway \
+  && sh autogen.sh \
+  && ./configure --prefix=/opt/janus --enable-post-processing \
+  && make \
+  && make install \
+  && make configs \
+  && cd ../ \
+  && rm -rf janus-gateway.tar.gz janus-gateway
 
-#RUN cp -rp ~/janus-gateway/certs /opt/janus/share/janus
+# Declare the ports we use
+# EXPOSE 7088 8088 8188 7089 8089 8189
 
-COPY conf/*.cfg /opt/janus/etc/janus/
+ARG BUILD_DATE
+ARG VCS_REF
 
-CMD /opt/janus/bin/janus --nat-1-1=${DOCKER_IP}
+ENTRYPOINT ["/opt/janus/bin/janus"]
+CMD ["--stun-server=stun.l.google.com:19302"]
