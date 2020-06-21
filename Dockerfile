@@ -97,5 +97,5 @@ RUN cd janus-gateway \
 ARG BUILD_DATE
 ARG VCS_REF
 
-ENTRYPOINT ["/opt/janus/bin/janus --nat-1-1=${DOCKER_IP}"]
+ENTRYPOINT ["/opt/janus/bin/janus"]
 CMD ["--stun-server=stun.l.google.com:19302"]
