@@ -59,7 +59,7 @@ RUN cd /tmp \
   && rm -rf libnice-${LIBNICE_V}
 
 
-ARG JANUS_VERSION=0.10.2
+ARG JANUS_VERSION=0.10.3
 RUN wget -O janus-gateway.tar.gz https://github.com/meetecho/janus-gateway/archive/v${JANUS_VERSION}.tar.gz \
   && mkdir janus-gateway \
   && tar xvf janus-gateway.tar.gz -C janus-gateway --strip-components 1 \
