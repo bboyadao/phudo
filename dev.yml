@@ -2,21 +2,18 @@ version: '3.6'
 services:
   janusgw:
     container_name: 'janusgw'
-
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: ./
     ports:
       - "7088:7088"
       - "8088:8088"
       - "8188:8188"
       - "8089:8089"
+      - "7889:7889"
       - "10000-10200:10000-10200/udp"
-    environment:
-      - DOCKER_IP=192.168.2.103
     volumes:
       - janus_static:/usr/local/src/janus-gateway/html
       - ./config/janusx:/opt/janus/etc/janus
+      - ./config/cert:/opt/janus/ssl/cert/
     networks:
       - youbook_network
 
