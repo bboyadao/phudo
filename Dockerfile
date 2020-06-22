@@ -113,7 +113,7 @@ RUN ln -s /usr/lib/libnice.so.10.10.0 /usr/lib/libnice.so
 
 COPY --from=builder /usr/local/bin/janus /usr/local/bin/janus
 COPY --from=builder /usr/local/bin/janus-cfgconv /usr/local/bin/janus-cfgconv
-#COPY --from=builder /usr/local/etc/janus /usr/local/etc/janus
+COPY --from=builder /usr/local/etc/janus /usr/local/etc/janus
 COPY --from=builder /usr/local/lib/janus /usr/local/lib/janus/
 COPY --from=builder /usr/local/share/janus /usr/local/share/janus
 COPY --from=builder /janus-gateway/html  /opt/janus/src/janus-gateway/html
