@@ -1,0 +1,63 @@
+version: '3'
+services:
+  nginx:
+    container_name: 'nginx'
+    build:
+      context: ./nginx/
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./html:/usr/share/janus/html/
+      - api_static:/etc/share/staticfiles:ro
+    networks:
+      - youbook_network
+
+  janusgw:
+    container_name: 'janusgw'
+    build: ./gateway
+    ports:
+      - 8088:8088
+      - 8188:8188
+      - 8089:8089
+      - 7088:7088
+      - 7889:7889
+      - 10000-10200:10000-10200/udp
+    volumes:
+      - ./config/cert:/opt/janus/ssl/cert/
+      - /etc/letsencrypt/live/laiday.net:/usr/local/letsencrypt/:ro
+    # - janus_static:/janus-gateway/html
+      - ./config/janus:/usr/local/etc/janus/
+
+    networks:
+      - youbook_network
+
+  api:
+    container_name: 'api'
+    build:
+      context: ./youbook_api
+      dockerfile: Dockerfile
+    command: daphne -b 0.0.0.0 -p 8000 youbook.asgi:application
+    ports:
+      - 8000:8000
+    environment:
+      - DOCKER='1'
+    networks:
+      - youbook_network
+    volumes:
+      - api_static:/app/static_collected
+
+volumes:
+  janus_static:
+  cert:
+  mysql-data:
+  postgresql-data:
+  redis-data:
+  mongodb-data:
+  api_static:
+
+networks:
+  youbook_network:
+    driver: bridge
