@@ -1,12 +1,12 @@
-[submodule "youbook_api"]
-	path = youbook_api
-	url = ttps://github.com/bboyadao/youbook_api.git
 [submodule "turn"]
 	path = turn
 	url = https://github.com/bboyadao/turn.git
-[submodule "youbook_front"]
-	path = youbook_front
-	url = https://github.com/bboyadao/youbook_front.git
 [submodule "gateway"]
 	path = gateway
 	url = https://github.com/bboyadao/gateway.git
+[submodule "youbook_api"]
+	path = youbook_api
+	url = https://github.com/bboyadao/youbook_api.git
+[submodule "youbook_front"]
+	path = youbook_front
+	url = https://github.com/bboyadao/youbook_front.git
