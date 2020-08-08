@@ -7,3 +7,6 @@
 [submodule "youbook_front"]
 	path = youbook_front
 	url = https://github.com/bboyadao/youbook_front.git
+[submodule "gateway"]
+	path = gateway
+	url = https://github.com/bboyadao/gateway.git
