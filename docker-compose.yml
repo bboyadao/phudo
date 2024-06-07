@@ -10,7 +10,7 @@ services:
       - 443:443
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - ./html:/usr/share/janus/html/
+      - ./gateway/html:/usr/share/janus/html/
       - api_static:/etc/share/staticfiles:ro
     networks:
       - youbook_network
@@ -26,10 +26,10 @@ services:
       - 7889:7889
       - 10000-10200:10000-10200/udp
     volumes:
-      - ./config/cert:/opt/janus/ssl/cert/
-      - /etc/letsencrypt/live/laiday.net:/usr/local/letsencrypt/:ro
+      # - ./config/cert:/opt/janus/ssl/cert/
+      # - /etc/letsencrypt/live/laiday.net:/usr/local/letsencrypt/:ro
     # - janus_static:/janus-gateway/html
-      - ./config/janus:/usr/local/etc/janus/
+      - ./gateway/config/janus:/usr/local/etc/janus/
 
     networks:
       - youbook_network
